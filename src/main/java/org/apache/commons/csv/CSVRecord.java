@@ -15,6 +15,10 @@
  * limitations under the License.
  */
 
+/*
+ * Modifications copyright © 2017 MarkLogic Corporation.
+ */
+
 package org.apache.commons.csv;
 
 import java.io.Serializable;

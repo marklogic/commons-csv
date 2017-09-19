@@ -14,6 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/*
+ * Modifications copyright © 2017 MarkLogic Corporation.
+ */
+
 package org.apache.commons.csv.issues;
 
 import java.io.IOException;
