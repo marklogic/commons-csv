@@ -16,7 +16,8 @@
  */
 
 /*
- * Modifications copyright © 2017 MarkLogic Corporation.
+ * Modifications copyright © 2022 MarkLogic Corporation.
+ * Fixed a bug in counting the multibyte character bytes.
  */
 
 package org.apache.commons.csv;
