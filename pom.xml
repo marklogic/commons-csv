@@ -31,6 +31,7 @@
 The Apache Commons CSV library provides a simple interface for reading and writing
 CSV files of various types.
   </description>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>

@@ -28,8 +28,8 @@ import static org.apache.commons.csv.Constants.UNDEFINED;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.Charset;
 import java.nio.CharBuffer;
@@ -80,12 +80,41 @@ final class ExtendedBufferedReader extends BufferedReader {
         if (current == CR || current == LF && lastChar != CR) {
             eolCounter++;
         }
+        if (encoder != null) {
+            this.bytesRead += getCharBytes(current);
+        }
         lastChar = current;
         this.position++;
-        if (encoder != null) {
-            this.bytesRead += encoder.encode(CharBuffer.wrap(new char[] { (char)current })).limit();
-        }
         return lastChar;
+    }
+
+    /**
+     *  In Java, a char data type are based on the original Unicode
+     *  specification, which defined characters as fixed-width 16-bit entities.
+     *   U+0000 to U+FFFF:
+     *     - BMP, represented using 1 16-bit char
+     *     - Consists of UTF-8 1-byte, 2-byte, some 3-byte chars
+     *   U+10000 to U+10FFFF:
+     *     - Supplementary characters, represented as a pair of characters,
+     *     the first char from the high-surrogates range (\uD800-\uDBFF),
+     *     and the second char from the low-surrogates range (uDC00-\uDFFF).
+     *     - Consists of UTF-8 some 3-byte chars and 4-byte chars
+     */
+    private long getCharBytes(int current) throws CharacterCodingException {
+        char cChar = (char)current;
+        char lChar = (char)lastChar;
+        if (!Character.isSurrogate(cChar)) {
+            return encoder.encode(
+                CharBuffer.wrap(new char[] {cChar})).limit();
+        } else {
+            if (Character.isHighSurrogate(cChar)) {
+                // Move on to the next char (low surrogate)
+                return 0;
+            } else if (Character.isSurrogatePair(lChar, cChar)) {
+                return encoder.encode(
+                    CharBuffer.wrap(new char[] {lChar, cChar})).limit();
+            } else throw new CharacterCodingException();
+        }
     }
 
     /**
