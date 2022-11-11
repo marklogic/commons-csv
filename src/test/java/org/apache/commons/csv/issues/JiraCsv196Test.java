@@ -16,7 +16,8 @@
  */
 
 /*
- * Modifications copyright © 2017 MarkLogic Corporation.
+ * Modifications copyright © 2022 MarkLogic Corporation.
+ * Added unit tests for parsing CSV Records containing multibyte characters.
  */
 
 package org.apache.commons.csv.issues;
