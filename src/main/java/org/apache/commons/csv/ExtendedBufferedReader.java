@@ -24,6 +24,10 @@ import static org.apache.commons.io.IOUtils.EOF;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.UnsynchronizedBufferedReader;
@@ -49,6 +53,16 @@ final class ExtendedBufferedReader extends UnsynchronizedBufferedReader {
     private long position;
     private long positionMark;
 
+    /** The number of bytes read so far */
+    private long bytesRead;
+    /** Encoder used to calculate the bytes of characters */
+    CharsetEncoder encoder;
+    
+    /**
+     * A flag to indicate if the read is a peek operation.
+     */
+    private boolean isReadPeek;
+
     /**
      * Constructs a new instance using the default buffer size.
      */
@@ -56,6 +70,14 @@ final class ExtendedBufferedReader extends UnsynchronizedBufferedReader {
         super(reader);
     }
 
+    ExtendedBufferedReader(final Reader reader, String encoding) {
+        super(reader);
+        if (encoding != null) {
+            encoder = Charset.forName(encoding).newEncoder();
+        }
+        isReadPeek = false;
+    }
+    
     /**
      * Closes the stream.
      *
@@ -118,9 +140,41 @@ final class ExtendedBufferedReader extends UnsynchronizedBufferedReader {
             current == EOF && lastChar != CR && lastChar != LF && lastChar != EOF) {
             lineNumber++;
         }
+        if (encoder != null && !isReadPeek) {
+            this.bytesRead += getCharBytes(current); 
+        }
         lastChar = current;
         position++;
         return lastChar;
+    }
+
+    /**
+     *  In Java, a char data type are based on the original Unicode
+     *  specification, which defined characters as fixed-width 16-bit entities.
+     *   U+0000 to U+FFFF:
+     *     - BMP, represented using 1 16-bit char
+     *     - Consists of UTF-8 1-byte, 2-byte, some 3-byte chars
+     *   U+10000 to U+10FFFF:
+     *     - Supplementary characters, represented as a pair of characters,
+     *     the first char from the high-surrogates range (\uD800-\uDBFF),
+     *     and the second char from the low-surrogates range (uDC00-\uDFFF).
+     *     - Consists of UTF-8 some 3-byte chars and 4-byte chars
+     */
+    private long getCharBytes(int current) throws CharacterCodingException {
+        char cChar = (char)current;
+        char lChar = (char)lastChar;
+        if (!Character.isSurrogate(cChar)) {
+            return encoder.encode(
+                CharBuffer.wrap(new char[] {cChar})).limit();
+        } else {
+            if (Character.isHighSurrogate(cChar)) {
+                // Move on to the next char (low surrogate)
+                return 0;
+            } else if (Character.isSurrogatePair(lChar, cChar)) {
+                return encoder.encode(
+                    CharBuffer.wrap(new char[] {lChar, cChar})).limit();
+            } else throw new CharacterCodingException();
+        }
     }
 
     @Override
@@ -188,6 +242,31 @@ final class ExtendedBufferedReader extends UnsynchronizedBufferedReader {
         lastChar = lastCharMark;
         position = positionMark;
         super.reset();
+    }
+
+    /**
+     * Gets the number of bytes read by the reader.
+     *
+     * @return the number of bytes read by the read
+     */
+    long getBytesRead() {
+        return this.bytesRead;
+    }
+
+    /**
+     * Returns the next character in the current reader without consuming it. So the next call to {@link #read()} will still return this value.
+     *
+     * @return the next character
+     * @throws IOException If an I/O error occurs
+     */
+    @Override
+    public int peek() throws IOException {
+        isReadPeek = true;
+        mark(1);
+        final int c = read();
+        reset();
+        isReadPeek = false;
+        return c;
     }
 
 }

@@ -2074,6 +2074,10 @@ public final class CSVFormat implements Serializable {
         return new CSVParser(reader, this);
     }
 
+    public CSVParser parse(final Reader reader, final long characterOffset, final long recordNumber, String encoding) throws IOException {
+        return new CSVParser(reader, this, characterOffset, recordNumber, encoding);
+    }
+
     /**
      * Prints to the specified output.
      *
