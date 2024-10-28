@@ -111,7 +111,7 @@ final class Lexer implements Closeable {
     long getBytesRead() {
         return reader.getBytesRead();
     }
-    
+
     /**
      * Returns the current line number
      *

@@ -2074,6 +2074,21 @@ public final class CSVFormat implements Serializable {
         return new CSVParser(reader, this);
     }
 
+    /**
+     * Parses the specified content.
+     *
+     * <p>
+     * See also the various static parse methods on {@link CSVParser}.
+     * </p>
+     *
+     * @param reader the input stream
+     * @param characterOffset the character offset
+     * @param recordNumber the record number
+     * @param encoding the encoding
+     * @return a parser over a stream of {@link CSVRecord}s.
+     * @throws IOException If an I/O error occurs
+     * @throws CSVException Thrown on invalid input.
+     */
     public CSVParser parse(final Reader reader, final long characterOffset, final long recordNumber, String encoding) throws IOException {
         return new CSVParser(reader, this, characterOffset, recordNumber, encoding);
     }

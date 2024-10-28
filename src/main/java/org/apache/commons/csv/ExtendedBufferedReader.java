@@ -57,7 +57,7 @@ final class ExtendedBufferedReader extends UnsynchronizedBufferedReader {
     private long bytesRead;
     /** Encoder used to calculate the bytes of characters */
     CharsetEncoder encoder;
-    
+
     /**
      * A flag to indicate if the read is a peek operation.
      */
@@ -77,7 +77,7 @@ final class ExtendedBufferedReader extends UnsynchronizedBufferedReader {
         }
         isReadPeek = false;
     }
-    
+
     /**
      * Closes the stream.
      *
@@ -141,7 +141,7 @@ final class ExtendedBufferedReader extends UnsynchronizedBufferedReader {
             lineNumber++;
         }
         if (encoder != null && !isReadPeek) {
-            this.bytesRead += getCharBytes(current); 
+            this.bytesRead += getCharBytes(current);
         }
         lastChar = current;
         position++;
@@ -161,8 +161,8 @@ final class ExtendedBufferedReader extends UnsynchronizedBufferedReader {
      *     - Consists of UTF-8 some 3-byte chars and 4-byte chars
      */
     private long getCharBytes(int current) throws CharacterCodingException {
-        char cChar = (char)current;
-        char lChar = (char)lastChar;
+        char cChar = (char) current;
+        char lChar = (char) lastChar;
         if (!Character.isSurrogate(cChar)) {
             return encoder.encode(
                 CharBuffer.wrap(new char[] {cChar})).limit();

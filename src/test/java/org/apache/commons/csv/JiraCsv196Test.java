@@ -39,9 +39,7 @@ public class JiraCsv196Test {
             // "org/apache/commons/csv/CSV-196/japanese.csv"), format, 0L, 1L, "UTF-8");
         CSVParser parser =  format.parse(getTestInput(
             "org/apache/commons/csv/CSV-196/japanese.csv"), 0L, 1L, "UTF-8");
-
-        
-            long[] charByteKey = {0, 89, 242, 395};
+        long[] charByteKey = {0, 89, 242, 395};
         int idx = 0;
         for (CSVRecord record : parser) {
             assertEquals(charByteKey[idx++], record.getCharacterByte());
@@ -57,9 +55,7 @@ public class JiraCsv196Test {
             .setDelimiter(',')
             .setQuote('\'')
             .build();
-        
-        // CSVParser parser = new CSVParser(getTestInput(
-        //     "org/apache/commons/csv/CSV-196/emoji.csv"), format, 0L, 1L, "UTF-8");
+
         CSVParser parser =  format.parse(getTestInput(
                 "org/apache/commons/csv/CSV-196/emoji.csv"), 0L, 1L, "UTF-8");
 

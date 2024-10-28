@@ -17,8 +17,6 @@
 
 package org.apache.commons.csv;
 
-import static org.apache.commons.csv.Constants.EMPTY_STRING_ARRAY;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;

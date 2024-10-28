@@ -441,7 +441,7 @@ public final class CSVParser implements Iterable<CSVRecord>, Closeable {
             this(reader, format, characterOffset, recordNumber, null);
         }
 
-    public CSVParser(final Reader reader, final CSVFormat format, final long characterOffset,final long recordNumber, 
+    public CSVParser(final Reader reader, final CSVFormat format, final long characterOffset, final long recordNumber,
         String encoding) throws IOException {
         Objects.requireNonNull(reader, "reader");
         Objects.requireNonNull(format, "format");
