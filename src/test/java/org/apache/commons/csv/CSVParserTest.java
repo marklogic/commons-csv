@@ -699,6 +699,7 @@ public class CSVParserTest {
             "11111111111111,'4017-09-01',きちんと節分近くには咲いてる～,v4\n" +
             "22222222222222,'4017-01-01',おはよう私の友人～,v4\n" +
             "33333333333333,'4017-01-01',きる自然の力ってすごいな～,v4\n";
+        // String code = "'1',4";
         // final CSVFormat format = CSVFormat.newFormat(',').withQuote('\'');
         final CSVFormat format = CSVFormat.Builder.create()
                                .setDelimiter(',')
