@@ -441,6 +441,31 @@ public final class CSVParser implements Iterable<CSVRecord>, Closeable {
             this(reader, format, characterOffset, recordNumber, null);
         }
 
+        /**
+     * Constructs a new instance using the given {@link CSVFormat}
+     *
+     * <p>
+     * If you do not read all records from the given {@code reader}, you should call {@link #close()} on the parser,
+     * unless you close the {@code reader}.
+     * </p>
+     *
+     * @param reader
+     *            a Reader containing CSV-formatted input. Must not be null.
+     * @param format
+     *            the CSVFormat used for CSV parsing. Must not be null.
+     * @param characterOffset
+     *            Lexer offset when the parser does not start parsing at the beginning of the source.
+     * @param recordNumber
+     *            The next record number to assign
+     * @param encoding
+     *            The encoding to use for the reader
+     * @throws IllegalArgumentException
+     *             If the parameters of the format are inconsistent or if either the reader or format is null.
+     * @throws IOException
+     *             If there is a problem reading the header or skipping the first record
+     * @throws CSVException Thrown on invalid input.
+     * @since 1.12
+     */
     public CSVParser(final Reader reader, final CSVFormat format, final long characterOffset, final long recordNumber,
         String encoding) throws IOException {
         Objects.requireNonNull(reader, "reader");
