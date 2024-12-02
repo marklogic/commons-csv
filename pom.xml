@@ -15,6 +15,12 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
+
+<!--
+
+ Modifications copyright © 2017, 2022, 2024 MarkLogic Corporation.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -23,11 +29,12 @@
     <version>75</version>
   </parent>
   <artifactId>commons-csv</artifactId>
-  <version>1.12.1-SNAPSHOT</version>
+  <version>1.12.1-marklogic</version>
   <name>Apache Commons CSV</name>
   <url>https://commons.apache.org/proper/commons-csv/</url>
   <inceptionYear>2005</inceptionYear>
   <description>The Apache Commons CSV library provides a simple interface for reading and writing CSV files of various types.</description>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
@@ -231,6 +238,8 @@
               <exclude>src/test/resources/org/apache/commons/csv/CSV-141/csv-141.csv</exclude>
               <exclude>src/test/resources/org/apache/commons/csv/csv-167/sample1.csv</exclude>
               <exclude>src/test/resources/org/apache/commons/csv/CSV-198/optd_por_public.csv</exclude>
+              <exclude>src/test/resources/org/apache/commons/csv/CSV-196/emoji.csv</exclude>
+              <exclude>src/test/resources/org/apache/commons/csv/CSV-196/japanese.csv</exclude>
               <exclude>src/test/resources/org/apache/commons/csv/CSV-213/999751170.patch.csv</exclude>
               <exclude>src/test/resources/org/apache/commons/csv/CSVFileParser/bom.csv</exclude>
               <exclude>src/test/resources/org/apache/commons/csv/CSVFileParser/test.csv</exclude>

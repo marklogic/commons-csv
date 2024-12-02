@@ -15,6 +15,11 @@
  * limitations under the License.
  */
 
+ /*
+
+ * Modifications copyright © 2017 MarkLogic Corporation.
+
+ */
 package org.apache.commons.csv;
 
 import static org.apache.commons.io.IOUtils.EOF;
@@ -101,6 +106,15 @@ final class Lexer implements Closeable {
      */
     long getCharacterPosition() {
         return reader.getPosition();
+    }
+
+    /**
+     * Returns the number of bytes read
+     *
+     * @return the number of bytes read
+     */
+    long getBytesRead() {
+        return reader.getBytesRead();
     }
 
     /**

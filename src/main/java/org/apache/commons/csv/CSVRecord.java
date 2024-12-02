@@ -15,6 +15,11 @@
  * limitations under the License.
  */
 
+/*
+
+ * Modifications copyright © 2017, 2024 MarkLogic Corporation.
+
+ */
 package org.apache.commons.csv;
 
 import java.io.Serializable;
@@ -48,6 +53,11 @@ public final class CSVRecord implements Serializable, Iterable<String> {
      */
     private final long characterPosition;
 
+    /**
+     * The start byte of this record as a character byte in the source stream.
+     */
+    private final long characterByte;
+
     /** The accumulated comments (if any) */
     private final String comment;
 
@@ -67,8 +77,18 @@ public final class CSVRecord implements Serializable, Iterable<String> {
         this.parser = parser;
         this.comment = comment;
         this.characterPosition = characterPosition;
+        this.characterByte = 0L;
     }
 
+    CSVRecord(final CSVParser parser, final String[] values,  final String comment, final long recordNumber,
+            final long characterPosition, final long characterByte) {
+        this.recordNumber = recordNumber;
+        this.values = values != null ? values : Constants.EMPTY_STRING_ARRAY;
+        this.parser = parser;
+        this.comment = comment;
+        this.characterPosition = characterPosition;
+        this.characterByte = characterByte;
+    }
     /**
      * Returns a value by {@link Enum}.
      *
@@ -142,6 +162,15 @@ public final class CSVRecord implements Serializable, Iterable<String> {
      */
     public long getCharacterPosition() {
         return characterPosition;
+    }
+
+    /**
+     * Returns the start byte of this record as a character byte in the source stream.
+     *
+     * @return the start byte of this record as a character byte in the source stream.
+     */
+    public long getCharacterByte() {
+        return characterByte;
     }
 
     /**

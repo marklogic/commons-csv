@@ -15,6 +15,11 @@
  * limitations under the License.
  */
 
+ /*
+
+ * Modifications copyright © 2017, 2024 MarkLogic Corporation.
+
+ */
 package org.apache.commons.csv;
 
 import static org.apache.commons.csv.Constants.CR;
@@ -690,6 +695,74 @@ public class CSVParserTest {
             // Expect no header comment
             assertFalse(parser.hasHeaderComment());
             assertNull(parser.getHeaderComment());
+        }
+    }
+
+    @Test
+    public void testGetRecordThreeBytesRead() throws Exception {
+        String code = "id,date,val5,val4\n" +
+            "11111111111111,'4017-09-01',きちんと節分近くには咲いてる～,v4\n" +
+            "22222222222222,'4017-01-01',おはよう私の友人～,v4\n" +
+            "33333333333333,'4017-01-01',きる自然の力ってすごいな～,v4\n";
+        CSVFormat format = CSVFormat.Builder.create().setDelimiter(',').setQuote('\'').build();
+        try (CSVParser parser =  format.parse(new StringReader(code), 0L, 1L, "UTF-8")) {
+            CSVRecord record = new CSVRecord(parser, null, null, 1L, 0L, 0L);
+
+            assertEquals(0, parser.getRecordNumber());
+            assertNotNull(record = parser.nextRecord());
+            assertEquals(1, record.getRecordNumber());
+            assertEquals(code.indexOf('i'), record.getCharacterPosition());
+            assertEquals(record.getCharacterByte(), record.getCharacterPosition());
+
+            assertNotNull(record = parser.nextRecord());
+            assertEquals(2, record.getRecordNumber());
+            assertEquals(code.indexOf('1'), record.getCharacterPosition());
+            assertEquals(record.getCharacterByte(), record.getCharacterPosition());
+
+            assertNotNull(record = parser.nextRecord());
+            assertEquals(3, record.getRecordNumber());
+            assertEquals(code.indexOf('2'), record.getCharacterPosition());
+            assertEquals(record.getCharacterByte(), 95);
+
+            assertNotNull(record = parser.nextRecord());
+            assertEquals(4, record.getRecordNumber());
+            assertEquals(code.indexOf('3'), record.getCharacterPosition());
+            assertEquals(record.getCharacterByte(), 154);
+
+            parser.close();
+        }
+    }
+
+    @Test
+    public void testGetRecordFourBytesRead() throws Exception {
+        String code = "id,a,b,c\n" +
+            "1,😊,🤔,😂\n" +
+            "2,😊,🤔,😂\n" +
+            "3,😊,🤔,😂\n";
+        CSVFormat format = CSVFormat.Builder.create().setDelimiter(',').setQuote('\'').build();
+
+        try (CSVParser parser =  format.parse(new StringReader(code), 0L, 1L, "UTF-8")) {
+            CSVRecord record = new CSVRecord(parser, null, null, 1L, 0L, 0L);
+
+            assertEquals(0, parser.getRecordNumber());
+            assertNotNull(record = parser.nextRecord());
+            assertEquals(1, record.getRecordNumber());
+            assertEquals(code.indexOf('i'), record.getCharacterPosition());
+            assertEquals(record.getCharacterByte(), record.getCharacterPosition());
+
+            assertNotNull(record = parser.nextRecord());
+            assertEquals(2, record.getRecordNumber());
+            assertEquals(code.indexOf('1'), record.getCharacterPosition());
+            assertEquals(record.getCharacterByte(), record.getCharacterPosition());
+            assertNotNull(record = parser.nextRecord());
+            assertEquals(3, record.getRecordNumber());
+            assertEquals(code.indexOf('2'), record.getCharacterPosition());
+            assertEquals(record.getCharacterByte(), 26);
+            assertNotNull(record = parser.nextRecord());
+            assertEquals(4, record.getRecordNumber());
+            assertEquals(code.indexOf('3'), record.getCharacterPosition());
+            assertEquals(record.getCharacterByte(), 43);
+            parser.close();
         }
     }
 
